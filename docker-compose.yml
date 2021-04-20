@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13.2-alpine
+    ports:
+      - 5432:5432
+    environment: 
+      DB_NAME: transactions
+      DB_PASSWORD: transactions
+      DB_USER: transactions
+  transactions:
+    image: transactions
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 9090:9090
+    depends_on: 
+      - postgres
