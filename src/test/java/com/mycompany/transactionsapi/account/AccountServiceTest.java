@@ -15,9 +15,18 @@ public class AccountServiceTest {
 	
 	@Test
 	public void shouldCreateAnAccountSuccessfully() {
+		//mockar retorno
 		var documentNumber = new String("12345678900");
 		var createdAccount = accountService.create(documentNumber);
 		assertEquals(documentNumber, createdAccount.getDocumentNumber().toString());
+	}
+
+	@Test
+	public void shouldFindAnAccountByDocumentSuccessfuly(){
+		//mockar retorno
+		var documentNumber = new String("12345678900");
+		var account = accountService.findByDocument(documentNumber);
+		assertEquals(documentNumber, account.getDocumentNumber().toString());
 	}
 
 }
