@@ -1,13 +1,13 @@
-package com.mycompany.transactionsapi;
+// package com.mycompany.transactionsapi;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class TransactionsApiApplicationTests {
+// @SpringBootTest
+// class TransactionsApiApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }

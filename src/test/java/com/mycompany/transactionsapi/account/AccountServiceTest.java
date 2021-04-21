@@ -4,13 +4,14 @@ package com.mycompany.transactionsapi.account;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
 	
-	@Autowired AccountService accountService; 
+	@InjectMocks AccountService accountService; 
 	
 	@Test
 	public void shouldCreateAnAccountSuccessfully() {
