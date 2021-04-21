@@ -1,0 +1,12 @@
+version: '3.4'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13.2-alpine
+    ports:
+      - 5432:5432
+    environment: 
+      POSTGRES_DB: transactions
+      POSTGRES_PASSWORD: transactions
+      POSTGRES_USER: transactions
+
