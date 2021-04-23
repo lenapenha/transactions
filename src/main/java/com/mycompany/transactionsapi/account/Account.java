@@ -14,7 +14,10 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Account {
-	
+
+	public Account() {
+	}
+
 	@Id
 	@GeneratedValue
 	private Long accountId;
