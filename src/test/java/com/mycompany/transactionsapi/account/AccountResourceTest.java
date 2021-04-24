@@ -7,9 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigInteger;
-import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import javax.transaction.Transactional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
@@ -18,12 +18,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
 @TestPropertySource(
   locations = "/application-integrationtest.properties")
 public class AccountResourceTest {
@@ -52,37 +53,54 @@ public class AccountResourceTest {
     }
 
     @Test
+    @Sql("classpath:com/mycompany/transactionsapi/resources/createAccountList.sql")
     void shouldGetAllAccounts() throws Exception {
-    List<Account> accounts = List.of(new Account(new BigInteger("12345678900")), new Account(new BigInteger("12345678922")));
 
-    accountRepository.saveAll(accounts);
-
-    MvcResult result = mockMvc.perform(get("/account")
+        mockMvc.perform(get("/account")
             .contentType("application/json"))
             .andExpect(status().isOk())
-            .andReturn();
-            
-    ObjectMapper mapper = new ObjectMapper();
-    List<Account> resultAccounts = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Account>>() {});
-    
-    assertEquals(2, resultAccounts.size());
+            .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
+    @Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
+    void shouldGetAnAccountByIdSuccessfully() throws Exception {
+    
+        mockMvc.perform(get("/account/{accountId}", "1")
+            .contentType("application/json"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.account_id").value("1")) 
+            .andExpect(jsonPath("$.document_number").value("12345678900"));
+    }
+
+    @Test
+    void shouldNotFoundAnAccountWhenGetById() throws Exception {
+    
+        mockMvc.perform(get("/account/{accountId}", "3")
+            .contentType("application/json"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
     void shouldFindAnAccountByDocumentSuccessfully() throws Exception {
-    List<Account> accounts = List.of(new Account(new BigInteger("12345678900")), new Account(new BigInteger("12345678922")));
+    
+        mockMvc.perform(get("/account/find")
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString("12345678900")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.account_id").value("1")) 
+            .andExpect(jsonPath("$.document_number").value("12345678900"));
+    }
 
-    accountRepository.saveAll(accounts);
-
-   mockMvc.perform(get("/account/find")
+    @Test
+    void shouldNotFoundAnAccountWhenFindByDocument() throws Exception {
+    
+        mockMvc.perform(get("/account/find")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString("12345678922")))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.documentNumber").value("12345678922")) 
-            .andReturn();
+            .andExpect(status().isNotFound());
             
     }
     
-    //TODO Isolate tests
-    //TODO Test not found
 }

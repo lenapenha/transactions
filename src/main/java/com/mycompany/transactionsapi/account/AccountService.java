@@ -2,6 +2,9 @@ package com.mycompany.transactionsapi.account;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
+
+import com.mycompany.transactionsapi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +24,14 @@ public class AccountService {
 		return this.accountRepository.save(account);
 	}
 
+	public Account getAccountById(Long accountId) {
+		return accountRepository.findById(accountId)
+		.orElseThrow(() -> new NotFoundException("Could not find the resource requested"));
+	}
+
 	public Account findByDocument(BigInteger document) {
-		return this.accountRepository.findFirstByDocumentNumber(document);
+		return Optional.ofNullable(accountRepository.findFirstByDocumentNumber(document))
+		.orElseThrow(() -> new NotFoundException("Could not find any account with this document"));
 	}
 
     public List<Account> getAllAccounts() {
