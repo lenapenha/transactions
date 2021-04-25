@@ -1,7 +1,12 @@
 package com.mycompany.transactionsapi.account;
 
-public class AccountRepository {
-//importar spring-data-jpa
-//dockerizar bd postgres
-//configurar conexao
+import java.math.BigInteger;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AccountRepository extends JpaRepository<Account, Long>{
+    
+    Account findFirstByDocumentNumber(BigInteger documentNumber);
 }
