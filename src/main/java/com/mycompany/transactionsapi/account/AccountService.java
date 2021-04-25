@@ -26,7 +26,7 @@ public class AccountService {
 
 	public Account getAccountById(Long accountId) {
 		return accountRepository.findById(accountId)
-		.orElseThrow(() -> new NotFoundException("Could not find the resource requested"));
+		.orElseThrow(() -> new NotFoundException("Could not find any account with this ID"));
 	}
 
 	public Account findByDocument(BigInteger document) {

@@ -1,4 +1,4 @@
-package com.mycompany.transactionsapi.account;
+package com.mycompany.transactionsapi.Integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,23 +11,18 @@ import java.math.BigInteger;
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycompany.transactionsapi.account.Account;
+import com.mycompany.transactionsapi.account.AccountRepository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
-@TestPropertySource(
-  locations = "/application-integrationtest.properties")
-public class AccountResourceTest {
+public class AccountResourceTest extends BaseIntegrationTest{
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,7 +35,7 @@ public class AccountResourceTest {
 
 
     @Test
-    void shouldCreateAnAccountSuccessfullyFromResourceToDatabase() throws Exception {
+    public void shouldCreateAnAccountSuccessfullyFromResourceToDatabase() throws Exception {
     BigInteger document = new BigInteger("12345678900");
 
     mockMvc.perform(post("/account")
@@ -54,7 +49,7 @@ public class AccountResourceTest {
 
     @Test
     @Sql("classpath:com/mycompany/transactionsapi/resources/createAccountList.sql")
-    void shouldGetAllAccounts() throws Exception {
+    public void shouldGetAllAccounts() throws Exception {
 
         mockMvc.perform(get("/account")
             .contentType("application/json"))
@@ -64,7 +59,7 @@ public class AccountResourceTest {
 
     @Test
     @Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
-    void shouldGetAnAccountByIdSuccessfully() throws Exception {
+    public void shouldGetAnAccountByIdSuccessfully() throws Exception {
     
         mockMvc.perform(get("/account/{accountId}", "1")
             .contentType("application/json"))
@@ -74,7 +69,7 @@ public class AccountResourceTest {
     }
 
     @Test
-    void shouldNotFoundAnAccountWhenGetById() throws Exception {
+    public void shouldNotFoundAnAccountWhenGetById() throws Exception {
     
         mockMvc.perform(get("/account/{accountId}", "3")
             .contentType("application/json"))
@@ -83,7 +78,7 @@ public class AccountResourceTest {
 
     @Test
     @Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
-    void shouldFindAnAccountByDocumentSuccessfully() throws Exception {
+    public void shouldFindAnAccountByDocumentSuccessfully() throws Exception {
     
         mockMvc.perform(get("/account/find")
             .contentType("application/json")
@@ -94,7 +89,7 @@ public class AccountResourceTest {
     }
 
     @Test
-    void shouldNotFoundAnAccountWhenFindByDocument() throws Exception {
+    public void shouldNotFoundAnAccountWhenFindByDocument() throws Exception {
     
         mockMvc.perform(get("/account/find")
             .contentType("application/json")

@@ -5,12 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Getter;
 
 @Getter
 @Entity
-public class OperationsTypes {
+@Table(name="OperationTypes")
+public class OperationType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +21,6 @@ public class OperationsTypes {
     @Column(unique=true)
     private String opDescription;
 
-    public OperationsTypes(){};
+    public OperationType(){};
     
 }
