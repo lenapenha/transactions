@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Getter;
@@ -15,16 +16,16 @@ import lombok.Setter;
 @Entity
 public class Account {
 
-	public Account() {
-	}
-
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long accountId;
 	
 	@Column(unique=true)
 	private BigInteger documentNumber;
-	
+
+	public Account() {
+	}
+
 	public Account(BigInteger document) {
 		this.documentNumber = document;
 	}
