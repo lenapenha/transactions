@@ -8,15 +8,6 @@ group = 'com.mycompany'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-    integrationTestImplementation.extendsFrom testImplementation
-}
-
 repositories {
 	mavenCentral()
 }
@@ -33,6 +24,16 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
 	testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.6.28'
+	testImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.2'
+
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	integrationTestCompile.extendsFrom testImplementation
+    integrationTestRuntime.extendsFrom testRuntime
 }
 
 sourceSets {
@@ -40,16 +41,18 @@ sourceSets {
 		java {
 			compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
-			srcDir file('src/integration/java')
+			srcDir file('src/integration-test/java')
 		}
-		resources.srcDir file('src/integration/resources')
+		resources.srcDir file('src/integration-test/resources')
 	}
 }
 
 task integrationTest(type: Test) {
-    setTestClassesDirs(sourceSets.integrationTest.output)
-    classpath = sourceSets.integrationTest.runtimeClasspath
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath	
 }
+
+ check.dependsOn integrationTest
 
 test {
 	useJUnitPlatform()

@@ -1,4 +1,4 @@
-package com.mycompany.transactionsapi.Integration;
+package com.mycompany.transactionsapi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.transactionsapi.account.Account;
 import com.mycompany.transactionsapi.account.AccountRepository;
+import com.mycompany.transactionsapi.account.AccountRequest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +37,19 @@ public class AccountResourceTest extends BaseIntegrationTest{
 
     @Test
     public void shouldCreateAnAccountSuccessfullyFromResourceToDatabase() throws Exception {
-    BigInteger document = new BigInteger("12345678900");
+    AccountRequest request = new AccountRequest(new BigInteger("12345678900"));
 
     mockMvc.perform(post("/account")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(document)))
+            .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated());
 
     Account account = accountRepository.findFirstByDocumentNumber(new BigInteger("12345678900"));
-    assertEquals(document, account.getDocumentNumber());
+    assertEquals(request.getDocumentNumber(), account.getDocumentNumber());
     }
 
     @Test
-    @Sql("classpath:com/mycompany/transactionsapi/resources/createAccountList.sql")
+    @Sql("classpath:createAccountList.sql")
     public void shouldGetAllAccounts() throws Exception {
 
         mockMvc.perform(get("/account")
@@ -58,7 +59,7 @@ public class AccountResourceTest extends BaseIntegrationTest{
     }
 
     @Test
-    @Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
+    @Sql("classpath:createAccount.sql")
     public void shouldGetAnAccountByIdSuccessfully() throws Exception {
     
         mockMvc.perform(get("/account/{accountId}", "1")
@@ -77,7 +78,7 @@ public class AccountResourceTest extends BaseIntegrationTest{
     }
 
     @Test
-    @Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
+    @Sql("classpath:createAccount.sql")
     public void shouldFindAnAccountByDocumentSuccessfully() throws Exception {
     
         mockMvc.perform(get("/account/find")

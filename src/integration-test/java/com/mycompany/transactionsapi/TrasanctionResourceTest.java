@@ -1,4 +1,4 @@
-package com.mycompany.transactionsapi.Integration;
+package com.mycompany.transactionsapi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 @AutoConfigureMockMvc
 @Transactional
-@Sql("classpath:com/mycompany/transactionsapi/resources/createAccount.sql")
+@Sql("classpath:createAccount.sql")
 public class TrasanctionResourceTest extends BaseIntegrationTest{
 
     @Autowired
