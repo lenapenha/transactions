@@ -56,7 +56,7 @@ public class AccountServiceTest {
 			accountService.getAccountById(2L);
 		});
 		
-		assertTrue(notFoundException.getMessage().contains("Could not find the resource requested"));
+		assertTrue(notFoundException.getMessage().contains("Could not find any account with this ID"));
 	}
 
 	@Test
