@@ -1,7 +1,8 @@
 version: '3.4'
+
 services:
   postgres:
-    container_name: postgres
+    container_name: postgresdb
     image: postgres:13.2-alpine
     ports:
       - 5432:5432
@@ -9,4 +10,21 @@ services:
       POSTGRES_DB: transactions
       POSTGRES_PASSWORD: transactions
       POSTGRES_USER: transactions
-
+  flyway:
+    container_name: flyway
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://postgresdb/transactions -user=transactions -password=transactions -connectRetries=60 migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgres
+  transactions:
+    image: transactions
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    container_name: "transactions-api"
+    depends_on: 
+      - postgres

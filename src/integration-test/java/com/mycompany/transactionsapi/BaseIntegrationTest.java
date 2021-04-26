@@ -1,4 +1,4 @@
-package com.mycompany.transactionsapi.Integration;
+package com.mycompany.transactionsapi;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;

@@ -25,8 +25,8 @@ public class AccountResource {
     }
 
     @PostMapping
-    public ResponseEntity<Account> create(@RequestBody BigInteger document){
-       return ResponseEntity.status(HttpStatus.CREATED).body(this.accountService.create(document));
+    public ResponseEntity<Account> create(@RequestBody AccountRequest request){
+       return ResponseEntity.status(HttpStatus.CREATED).body(this.accountService.create(request.getDocumentNumber()));
     }
 
 

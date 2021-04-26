@@ -1,5 +1,4 @@
 FROM openjdk:11-jdk-slim
-VOLUME /tmp
 ARG JAVA_OPTS
 ENV JAVA_OPTS=$JAVA_OPTS
 COPY build/libs/transactions-api-0.0.1-SNAPSHOT.jar transactions.jar

@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  postgresdbtest:
+    container_name: postgresdbtest
+    image: postgres:13.2-alpine
+    ports:
+      - 5432:5432
+    environment: 
+      POSTGRES_DB: transactionstest
+      POSTGRES_PASSWORD: transactionstest
+      POSTGRES_USER: transactionstest
+  flyway:
+    container_name: flyway
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://postgresdbtest/transactions -user=transactions -password=transactions -connectRetries=60 migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgresdbtest
